@@ -1,0 +1,19 @@
+{
+  "name": "word-definition",
+  "version": "1.0.0",
+  "description": "Grabs the definition of a word from the wiktionary - supported languages: english and french",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Patatruc/word-definition.git"
+  },
+  "author": "Patatruc <xodrow@yahoo.com.fr> (http://fundox.free.fr)",
+  "license": "GNU GENERAL PUBLIC LICENSE",
+  "bugs": {
+    "url": "https://github.com/Patatruc/word-definition/issues"
+  },
+  "homepage": "https://github.com/Patatruc/word-definition#readme"
+}
