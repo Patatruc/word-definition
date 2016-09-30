@@ -1,6 +1,6 @@
 # word-definition
 
-This node.js module provides a single function allowing to grab the definition of a word from the [Wiktionary](https://en.wiktionary.org) and return it in a JSON object.
+This node.js module provides a single function allowing to grab the definition of a word from the [Wiktionary](https://en.wiktionary.org) and return it in an object.
 
 For instance the definition of "ride":
 
@@ -83,9 +83,9 @@ If this option is set, the text formats (bold or italic) of the original definit
 
 This function is called when the definition is ready (it is of course asynchronous and can in some case require more than 2 or 3 calls to the Wiktionary API).
 
-The definition is passed in the argument. It is a JSON object containing the defined `word`, its `category` (verb, noun, adjective...) and the `definition` itself.
+The definition is passed in the argument. It is an object containing the defined `word`, its `category` (verb, noun, adjective...) and the `definition` itself.
 
-If no definition has been found or for any other error, the JSON object contains only the the `word` field and the error message in an `err` field.
+If no definition has been found or for any other error, the object contains only the the `word` field and the error message in an `err` field.
 
 ##Notes:
 
