@@ -6,8 +6,8 @@ var pagesURL = ".wiktionary.org/w/api.php?action=query&prop=revisions&rvprop=con
 
 function getDef(word, lng, options, callback) {
 
-	if(typeof callback != "function") throw "definition-picker error: no callback specified (getDef function).";
-	if(typeof options != "object") throw "definition-picker error: options should be an object or null (getDef function).";
+	if(typeof callback != "function") throw "word-definition error: no callback specified (getDef function).";
+	if(typeof options != "object") throw "word-definition error: options should be an object or null (getDef function).";
 
 	word = stripAccents(word.toLowerCase());
 	if(!word || /[^a-z]/.test(word)) callback({ word: word, err: "invalid characters" });
