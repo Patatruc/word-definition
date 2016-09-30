@@ -2,7 +2,7 @@
 
 This node.js module provides a single function allowing to grab the definition of a word from the [Wiktionary](https://en.wiktionary.org) and return it in a JSON object.
 
-For instance the definition of "ride" returns the following object:
+For instance the definition of "ride":
 
 ```
 {
@@ -11,6 +11,7 @@ For instance the definition of "ride" returns the following object:
 	"definition": "To transport oneself by sitting on and directing a horse, later also a bicycle etc."
 }
 ```
+It supports two languages: **english** and **french**.
 
 It retrieves only the **topmost definition**, for instance in the example above it returns the (first) definition of the verb *"to ride"* and not of the noun *"ride"* (because the definition of the verb comes first in the Wiktionary [document](https://en.wiktionary.org/wiki/ride)).
 
