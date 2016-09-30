@@ -30,7 +30,7 @@ npm install word-definition
 ```
 var wd = require("word-definition");
 
-wd.getDef(word_to_search, language, options, callback);
+wd.getDef(word_to_define, language, options, callback);
 ```
 
 ## Example
@@ -53,7 +53,7 @@ See demo.js for further examples.
 
 ## Arguments
 
-`word_to_search`: the word that you want to define, case insensitive and can have accented characters
+`word_to_define`: the word that you want to define, case insensitive and can have accented characters
 
 `language`: "en" (english) or "fr" (french) - required
 
