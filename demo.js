@@ -28,7 +28,6 @@ function demo3() {
 function demo4() {
 	wd.getDef("garçon", "fr", { hyperlinks: "html", formatted: true }, function(result) {
 		print(result, "Definition of 'GARCON', french, with HTML hyperlinks and text formatting");
-		// demo2();
 	});
 }
 
