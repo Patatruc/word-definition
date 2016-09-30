@@ -75,7 +75,7 @@ var parseArticle = {
 
 	en: function (page, obj) {
 
-		// ************ ANGLAIS *********************
+		// ************ ENGLISH PARSER *********************
 		
 		var cats = "(Verb)|(Noun)|(Adjective)|(Adverb)|(Conjunction)|(Preposition)|(Determiner)|(Article)|(Pronoun)|(Interjection)";
 		var def = "";
@@ -117,7 +117,7 @@ var parseArticle = {
 
 	fr: function (page, obj) {
 
-		// ************ FRANCAIS *********************
+		// ************ FRENCH PARSER *********************
 		
 		var def = "";
 		
