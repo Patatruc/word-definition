@@ -13,9 +13,9 @@ For instance the definition of "ride":
 ```
 It supports two languages: **english** and **french**.
 
-It retrieves only the **topmost definition**, for instance in the example above it returns the (first) definition of the verb *"to ride"* and not of the noun *"ride"* (because the definition of the verb comes first in the Wiktionary [document](https://en.wiktionary.org/wiki/ride)).
+It retrieves only the **topmost definition**, for instance in the example above it returns the (first) definition of the verb *"to ride"* and not of the noun *"ride"* (because the definition of the verb comes first in the related Wiktionary [document](https://en.wiktionary.org/wiki/ride)).
 
-It is lightweight and basic because I've used it for a Scrabble-like word game, not for an encyclopedia. Tyipical usage would be: I click on an unknown word in a web page, and the first definition is quickly displayed in a tooltip.
+It is lightweight and basic because I've written it for a [multiplayer word game](http://fundox.free.fr), not for an encyclopedia. Tyipical usage would be: I click on an unknown word in a web page, and a short definition is quickly displayed in a tooltip.
 
 ## Installation
 
@@ -79,7 +79,7 @@ Possible values are:
 
 If this option is set, the text formats (bold or italic) of the original definition are preserved and converted into CSS syles (for instance `<span style='font-weight:bold'>some text</span>`). Not set by default.
 
-##Callback function:
+##Callback function
 
 This function is called when the definition is ready (it is of course asynchronous and can in some case require more than 2 or 3 calls to the Wiktionary API).
 
@@ -87,9 +87,9 @@ The definition is passed in the argument. It is an object containing the defined
 
 If no definition has been found or for any other error, the object contains only the the `word` field and the error message in an `err` field.
 
-##Notes:
+##Notes
 
-. If you request a **flexed form** of a word, say for instance the plural of a noun like "HOUSES" or the past participle of a verb like "BROKEN", the module returns the definition of the "dictionary entry", **not flexed**, ie of the singluar "HOUSE" or of the infinitive "BREAK". It won't return *"Plural of house"* (like the search result of "HOUSES" in the Wiktionary) but *"A structure built or serving as an abode of human beings."*
+. If you request a **flexed form** of a word, say for instance the plural of a noun like "HOUSES" or the past participle of a verb like "BROKEN", the module returns the definition of the **root dictionary entry**, ie of the singular "HOUSE" or of the infinitive "BREAK". It won't return *"Plural of house"* (like the search result of "HOUSES" in the Wiktionary) -which would be totally useless- but *"A structure built or serving as an abode of human beings."*
 
 . I've used many regular expressions in order to isolate and "clean up" the definitions. There may be errors. Please report them to me and I'll try to refine the code.
 

@@ -1,6 +1,6 @@
 {
   "name": "word-definition",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Grabs the definition of a word from the wiktionary - supported languages: english and french",
   "main": "index.js",
   "scripts": {
