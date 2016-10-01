@@ -9,7 +9,7 @@ function getDef(word, lng, options, callback) {
 	if(typeof callback != "function") throw "word-definition error: no callback specified (getDef function).";
 	if(typeof options != "object") throw "word-definition error: options should be an object or null (getDef function).";
 
-	if(!word || /[\W\d_]/.test(word)) callback({ word: word, err: "invalid characters" });
+	if(!word || /[\W\d_]/.test(stripAccents(word))) callback({ word: word, err: "invalid characters" });
 	else {
 		if(parseArticle[lng] == null) callback({ word: word, err: "unsupported language" });
 		else {

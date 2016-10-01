@@ -1,8 +1,9 @@
 {
   "name": "word-definition",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Grabs the definition of a word from the wiktionary - supported languages: english and french",
   "main": "index.js",
+  "keywords": ["dictionary","wiktionary","definition"]
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

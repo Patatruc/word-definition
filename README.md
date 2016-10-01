@@ -1,4 +1,4 @@
-﻿# word-definition
+﻿﻿# word-definition
 
 This node.js module provides a single function allowing to grab the definition of a word from the [Wiktionary](https://en.wiktionary.org) and return it in an object.
 
@@ -13,9 +13,9 @@ For instance the definition of "ride":
 ```
 It supports two languages: **english** and **french**.
 
-It retrieves only the **topmost definition**, for instance in the example above it returns the (first) definition of the verb *"to ride"* and not of the noun *"ride"* (because the definition of the verb comes first in the related Wiktionary [document](https://en.wiktionary.org/wiki/ride)).
+It retrieves only the **topmost definition**, for instance in the example above it returns the (first) definition of the verb *"to ride"* and not of the noun *"ride"* (because the definition of the verb comes first in the related [Wiktionary document](https://en.wiktionary.org/wiki/ride)).
 
-It is lightweight and basic because I've written it for a [multiplayer word game](http://fundox.free.fr), not for an encyclopedia. Tyipical usage would be: I click on an unknown word in a web page, and a short definition is quickly displayed in a tooltip.
+It is lightweight and basic because I've written it for a [multiplayer word game](http://fundox.free.fr), not for an encyclopedia. A typical use would be: I click on an unknown word in a web page, and a short definition is quickly displayed in a tooltip.
 
 ## Installation
 
