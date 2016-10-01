@@ -1,10 +1,10 @@
-# word-definition
+ï»¿# word-definition
 
 This node.js module provides a single function allowing to grab the definition of a word from the [Wiktionary](https://en.wiktionary.org) and return it in an object.
 
 For instance the definition of "ride":
 
-```
+```javascript
 {
 	"word": "ride",
 	"category": "verb",
@@ -19,7 +19,7 @@ It is lightweight and basic because I've written it for a [multiplayer word game
 
 ## Installation
 
-With npm:
+with npm:
 
 ```
 npm install word-definition
@@ -27,15 +27,15 @@ npm install word-definition
 
 ## Usage
 
-```
+```javascript
 var wd = require("word-definition");
 
-wd.getDef(word_to_define, language, options, callback);
+wd.getDef(word, language, options, callback);
 ```
 
 ## Example
 
-```
+```javascript
 var wd = require("word-definition");
 
 wd.getDef("keyboard", "en", null, function(definition)) {
@@ -45,7 +45,7 @@ wd.getDef("keyboard", "en", null, function(definition)) {
 
 **Output:**
 
-```
+```javascript
 {"word":"keyboard","category":"noun","definition":"A set of keys used to operate a typewriter, computer etc."}
 ```
 
@@ -53,13 +53,13 @@ See demo.js for further examples.
 
 ## Arguments
 
-`word_to_define`: the word that you want to define, case insensitive and can have accented characters
+`word` : the word that you want to define, case insensitive and can have accented characters
 
 `language`: "en" (english) or "fr" (french) - required
 
-`options`: null or object - see below
+`options` : null or object - see below
 
-`callback`: callback function (see below)
+`callback` : callback function (see below)
 
 ## Options
 
@@ -91,9 +91,9 @@ If no definition has been found or for any other error, the object contains only
 
 If you request an **inflected form** of a word, say for instance the plural of a noun like "HOUSES" or the past participle of a verb like "BROKEN", the module returns the definition of the **root dictionary entry**, ie of the singular "HOUSE" or of the infinitive "BREAK".
 
-It won't return *"Plural of house"* (like the search result of "HOUSES" in the Wiktionary) -which would be perfectly true but totally useless- but *"A structure built or serving as an abode of human beings"*.
+For instance, it won't return *"Plural of house"* (like the search result of "HOUSES" in the Wiktionary) -which would be perfectly true but totally useless- but *"A structure built or serving as an abode of human beings"*.
 
-It's the same for **synonyms**. For instance, if you request the definition of "GRANDPA", it won't return *"Grandpa: grandfather"* (like the search result in the Wiktionary) but directly *"Grandfather: a father of someone’s parent"*.
+It's the same for **synonyms**. For instance, if you request the definition of "GRANDPA", it won't return *"Grandpa: grandfather"* (like the search result in the Wiktionary) but directly *"Grandfather: a father of someone's parent"*.
 
 ##Notes
 
