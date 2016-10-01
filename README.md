@@ -87,11 +87,17 @@ The definition is passed in the argument. It is an object containing the defined
 
 If no definition has been found or for any other error, the object contains only the the `word` field and the error message in an `err` field.
 
+##Definitions of inflected words and synonyms
+
+If you request an **inflected form** of a word, say for instance the plural of a noun like "HOUSES" or the past participle of a verb like "BROKEN", the module returns the definition of the **root dictionary entry**, ie of the singular "HOUSE" or of the infinitive "BREAK".
+
+It won't return *"Plural of house"* (like the search result of "HOUSES" in the Wiktionary) -which would be perfectly true but totally useless- but *"A structure built or serving as an abode of human beings"*.
+
+It's the same for **synonyms**. For instance, if you request the definition of "GRANDPA", it won't return *"Grandpa: grandfather"* (like the search result in the Wiktionary) but directly *"Grandfather: a father of someone’s parent"*.
+
 ##Notes
 
-. If you request a **flexed form** of a word, say for instance the plural of a noun like "HOUSES" or the past participle of a verb like "BROKEN", the module returns the definition of the **root dictionary entry**, ie of the singular "HOUSE" or of the infinitive "BREAK". It won't return *"Plural of house"* (like the search result of "HOUSES" in the Wiktionary) -which would be totally useless- but *"A structure built or serving as an abode of human beings."*
-
-. I've used many regular expressions in order to isolate and "clean up" the definitions. There may be errors. Please report them to me and I'll try to refine the code.
+. I've used many regular expressions in order to isolate and "clean up" the definitions, and also to search for root dictionary entries. There may be errors. Please report them to me and I'll try to refine the code.
 
 . If you use contents of the Wiktionary, you should indicate the source.
 

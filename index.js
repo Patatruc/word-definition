@@ -9,8 +9,7 @@ function getDef(word, lng, options, callback) {
 	if(typeof callback != "function") throw "word-definition error: no callback specified (getDef function).";
 	if(typeof options != "object") throw "word-definition error: options should be an object or null (getDef function).";
 
-	word = stripAccents(word.toLowerCase());
-	if(!word || /[^a-z]/.test(word)) callback({ word: word, err: "invalid characters" });
+	if(!word || /[\W\d_]/.test(word)) callback({ word: word, err: "invalid characters" });
 	else {
 		if(parseArticle[lng] == null) callback({ word: word, err: "unsupported language" });
 		else {
@@ -33,9 +32,10 @@ function getTitles(obj) {
 			if(articles.length) {
 				var exclude = obj.titles ? obj.titles[0] : "";
 				obj.titles = [];
+				var word2 = stripAccents(obj.word.toLowerCase());
 				articles.forEach(function(article) {
 					var title = article.title;
-					if (title != exclude && stripAccents(title.toLowerCase()) == obj.word) obj.titles.push(title);
+					if (title != exclude && stripAccents(title.toLowerCase()) == word2) obj.titles.push(title);
 				});
 				if (obj.titles.length) getArticle(obj);
 				else obj.callback({ word: obj.word, err: "not found" });
@@ -85,7 +85,7 @@ var parseArticle = {
 		if(match) {
 			var match2 = /\n{{((en-)|(head\|en)).*\n\n#(.+)(\n##(.+)){0,1}/.exec(match[0]);
 			if(match2) {
-				def = match2[4];
+				def = match2[4].trim();
 				if (match[6] && def.replace(/{{[^}]*}}/g, "").trim() == "") def = match2[6].trim();
 				if (def) {
 					obj.cat = match[1];
@@ -99,7 +99,15 @@ var parseArticle = {
 			}
 		}
 
-		if (def) cleanup(obj, obj.titles[0].replace(/#.*/, ""), obj.cat.toLowerCase(), def );
+		if (def) {
+			variante = /^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i.exec(def);
+			if(variante) {
+				obj.titles[0] = variante[variante.length - 1];
+				getArticle(obj);
+				return;
+			}			
+			cleanup(obj, obj.titles[0].replace(/#.*/, ""), obj.cat.toLowerCase(), def);
+		}
 
 		else {
 			delete obj.cat;
@@ -137,14 +145,18 @@ var parseArticle = {
 						return;
 					}
 				}
+				if(/^({{[^}]+}}\s*)*\.$/.test(def)) def = "";
 			}
 		}
 
 		if (def) {
-			var variante = /{{variante[^|]*\|([^|}]+)/i.exec(def);
+			var variante = /{{variante [^|]*\|([^|}]+)/i.exec(def);
 			if (!variante) variante = /{{cf\|([^}]+)/i.exec(def);
+			if (!variante) variante = /((Variante)|(Autre)) [^\[]+\[\[([^\]#|]+)/i.exec(def);
+			if (!variante) variante = /^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i.exec(def);
+
 			if(variante) {
-				obj.titles[0] = variante[1];
+				obj.titles[0] = variante[variante.length - 1];
 				getArticle(obj);
 				return;
 			}
@@ -169,8 +181,7 @@ var parseArticle = {
 
 function cleanup(obj, word, cat, def) {
 
-	def = def.replace(/{{[^}]*}}/g, "");
-
+	def = def.replace(/{{[^}]*}}/g, "").trim();
 	def = def.replace(/'''([^']+)'''/g, obj.options.formatted ? "<span style='bold'>$1</span>" : "$1");
 	def = def.replace(/''([^']+)''/g, obj.options.formatted ? "<span style='italic'>$1</span>" : "$1");
 
