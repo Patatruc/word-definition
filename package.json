@@ -1,7 +1,7 @@
 {
   "name": "word-definition",
-  "version": "2.0.0",
-  "description": "Grabs the definition of a word from the wiktionary - supported languages: english and french",
+  "version": "2.1.0",
+  "description": "Grabs the definition of a word from the wiktionary - supported languages: english, french and german",
   "main": "index.js",
   "keywords": ["dictionary","wiktionary","definition"],
   "scripts": {

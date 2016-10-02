@@ -1,6 +1,4 @@
-﻿﻿# word-definition
-
-This node.js module provides a single function allowing to grab the definition of a word from the [Wiktionary](https://en.wiktionary.org) and return it in an object.
+﻿This node.js module provides a single function allowing to grab the definition of a word from the [Wiktionary](https://en.wiktionary.org) and return it in an object.
 
 For instance the definition of "ride":
 
@@ -11,7 +9,7 @@ For instance the definition of "ride":
 	"definition": "To transport oneself by sitting on and directing a horse, later also a bicycle etc."
 }
 ```
-It supports two languages: **english** and **french**.
+It supports three languages: **english**, **french** and **german**.
 
 It retrieves only the **topmost definition**, for instance in the example above it returns the (first) definition of the verb *"to ride"* and not of the noun *"ride"* (because the definition of the verb comes first in the related [Wiktionary document](https://en.wiktionary.org/wiki/ride)).
 
@@ -53,9 +51,9 @@ See demo.js for further examples.
 
 ## Arguments
 
-`word` : the word that you want to define, case insensitive and can have accented characters
+`word` : the word that you want to define
 
-`language`: "en" (english) or "fr" (french) - required
+`language`: "en" (english), "fr" (french) or "de" (german) - required
 
 `options` : null or object - see below
 
@@ -63,11 +61,17 @@ See demo.js for further examples.
 
 ## Options
 
-There are 2 options:
+There are 3 options:
 
-#####`hyperlinks`:
+#####`exact` :
 
-Indicates how to deal the hyperlinks to Wiktionary pages in the definition.
+Indicates if the search should be "accent-sensitive". For instance, the word "événement" has two accented characters in french. If `exact = false` and you search for the definition of "evenement" without accents, it will work and return the definition of "événement". If `exact = true`, it returns a "not found" error.
+
+`true` by default.
+
+#####`hyperlinks` :
+
+Indicates how to handle the hyperlinks to Wiktionary pages in the definition.
 
 Possible values are:
 
@@ -75,7 +79,7 @@ Possible values are:
 - `"brackets"`: they are preserved in their original (wikimedia) format, like for instance [[typewriter]].
 - `"none"`: (by default), all hyperlinks are stripped from the definition.
 
-#####`formatted`:
+#####`formatted` :
 
 If this option is set, the text formats (bold or italic) of the original definition are preserved and converted into CSS syles (for instance `<span style='font-weight:bold'>some text</span>`). Not set by default.
 

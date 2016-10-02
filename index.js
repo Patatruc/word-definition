@@ -76,7 +76,7 @@ var languages = [
 						if (redirect) {
 							this.titles[0] = redirect[1];
 							// console.log(this.word + " : inflection ==> " + redirect[1]);
-							this.word = redirect[1];
+							// this.word = redirect[1];
 							this.getPage();
 							def = true;
 						}
@@ -85,7 +85,46 @@ var languages = [
 			}
 			return def;
 		}
+	},
+
+	{
+
+		lng: "de",
+
+		cats: "(Konjugierte Form)|(Deklinierte Form)|(Substantiv)|(Verb)|(Partizip[^|]*)|(Adjektiv)|(Adverb)|" +
+			"(Konjunktion)|(Subjunktion)|(Artikel)|(Numerale)|(Onomatopoetikum)|(Antwortpartikel)|(\[^p]+pronomen)",
+
+		variants: [],
+
+		searchDef: function(page) {
+
+			var def = "";
+
+			var match = new RegExp("{{Wortart\\|(" + (this.cat || this.cats) + ")\\|Deutsch}}[^]+").exec(page);
+
+			if(match) {
+				switch(match[1]) {
+					case "Konjugierte Form":
+					case "Deklinierte Form":
+						var redirect = /{{Grammatische Merkmale}}\n+[^\[]+\[\[([^\]|]+)/.exec(match[0]);
+						if (redirect) {
+							this.titles[0] = redirect[1].replace(/\W/, "");
+							this.getPage();
+							def = true;
+						}
+						break;
+					default:
+						var match2 = /\n{{Bedeutungen}}\n:\[1\](.*)/.exec(match[0]);
+						if(match2) {
+							def = match2[1].trim();
+							this.cat = match[1];
+						}
+				}
+			}
+			return def;
+		}
 	}
+
 ]
 
 var parsers = {};
@@ -93,8 +132,8 @@ var parsers = {};
 languages.forEach(function(props) {
 
 	var p = parsers[props.lng] = function(word, options, callback) {
-		this.base = parser.parser; 
-		this.base(word, props.lng, options, callback); 
+		this.base = parser.parser;
+		this.base(word, props.lng, options, callback);
 	}
 
 	p.prototype = new parser.parser;

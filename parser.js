@@ -12,6 +12,8 @@ var parser = function(word, lng, options, callback) {
 	this.callback = callback;
 	this.srwhat = "nearmatch";
 
+	this.stripAccents = this.options.exact == false ?  stripAccents : function(text) { return text; };
+
 }
 
 var errors = {
@@ -37,10 +39,10 @@ parser.prototype.getTitles = function() {
 			if(articles.length) {
 				var exclude = this.titles ? this.titles[0] : "";
 				this.titles = [];
-				var word2 = stripAccents(this.word.toLowerCase());
+				var word2 = this.stripAccents(this.word.toLowerCase());
 				articles.forEach(function(article) {
 					var title = article.title;
-					if (title != exclude && stripAccents(title.toLowerCase()) == word2) this.titles.push(title);
+					if (title != exclude && this.stripAccents(title.toLowerCase()) == word2) this.titles.push(title);
 				}, this);
 				if (this.titles.length) this.getPage();
 				else this.sendErr(errors.notFound);
