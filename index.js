@@ -91,8 +91,8 @@ var languages = [
 
 		lng: "de",
 
-		cats: "(Konjugierte Form)|(Deklinierte Form)|(Substantiv)|(Verb)|(Partizip[^|]*)|(Adjektiv)|(Adverb)|" +
-			"(Konjunktion)|(Subjunktion)|(Artikel)|(Numerale)|(Onomatopoetikum)|(Antwortpartikel)|(\[^p]+pronomen)",
+		cats: "(Konjugierte Form)|(Deklinierte Form)|(Substantiv)|(Verb)|(Partizip[^|]*)|(Adjektiv)|" +
+			"(Konjunktion)|(Subjunktion)|(Artikel)|(Numerale)|(Onomatopoetikum)|(Interjektion)|(.+)",
 
 		variants: [],
 
@@ -101,8 +101,10 @@ var languages = [
 			var def = "";
 
 			var match = new RegExp("{{Wortart\\|(" + (this.cat || this.cats) + ")\\|Deutsch}}[^]+").exec(page);
+			var found = !!match;
+			if(match.length == 14 && match[13]) found = /(adverb)|(partikel)|(pronomen)$/.test(match[13]);
 
-			if(match) {
+			if(found) {
 				switch(match[1]) {
 					case "Konjugierte Form":
 					case "Deklinierte Form":
