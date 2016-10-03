@@ -18,9 +18,6 @@ var languages = [
 
 		lng: "en",
 
-		cats: "(Verb)|(Noun)|(Adjective)|(Adverb)|(Conjunction)|(Preposition)|" +
-			"(Determiner)|(Article)|(Pronoun)|(Interjection)",
-
 		variants: [
 			/^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i,
 			/\s*{{[^|]+ of\|([^}|]+)/
@@ -30,7 +27,10 @@ var languages = [
 
 			var def = "";
 
-			var match = new RegExp("===(" + (this.cat || this.cats) + ")===[^]+").exec(page);
+			var cats = this.cat || "(Verb)|(Noun)|(Adjective)|(Adverb)|(Conjunction)|(Preposition)|" +
+				"(Determiner)|(Article)|(Pronoun)|(Interjection)";
+
+			var match = new RegExp("===(" + cats + ")===[^]+").exec(page);
 
 			if(match) {
 				var match2 = /\n{{((en-)|(head\|en)).*\n(\[\[[^\]]*\]\])*\n#(.+)(\n##(.+)){0,1}/.exec(match[0]);
@@ -48,12 +48,9 @@ var languages = [
 
 		lng: "fr",
 
-		cats: "(nom)|(verbe)|(adjectif)|(adverbe)|(conjonction[^|]*)|" +
-			"(article[^|]*)|(pronom[^|]*)(interjection)|(préposition)|(onomatopée)",
-
 		variants: [
 			/{{variante [^|]*\|([^|}]+)/i,
-			/{{cf\|([^}]+)/i,
+			/^\s*{{cf\|([^}]+)}}\s*\.*$/i,
 			/((Variante)|(Autre)) [^\[]+\[\[([^\]#|]+)/i,
 			/^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i
 		],
@@ -62,7 +59,10 @@ var languages = [
 
 			var def = "";
 			
-			var match = new RegExp("{{S\\|(" + (this.cat || this.cats) +
+			var cats = this.cat || "(nom)|(verbe)|(adjectif)|(adverbe)|(conjonction[^|]*)|" +
+			"(article[^|]*)|(pronom[^|]*)|(interjection)|(préposition)|(onomatopée)";
+
+			var match = new RegExp("{{S\\|(" + cats +
 				")\\|fr(\\|flexion)*.+(\\n[^#].+)*\\n#(.+)(\\n##(.+)){0,1}").exec(page);
 
 			if(match) {
@@ -91,18 +91,19 @@ var languages = [
 
 		lng: "de",
 
-		cats: "(Konjugierte Form)|(Deklinierte Form)|(Substantiv)|(Verb)|(Partizip[^|]*)|(Adjektiv)|" +
-			"(Konjunktion)|(Subjunktion)|(Artikel)|(Numerale)|(Onomatopoetikum)|(Interjektion)|(.+)",
-
 		variants: [],
 
 		searchDef: function(page) {
 
 			var def = "";
 
-			var match = new RegExp("{{Wortart\\|(" + (this.cat || this.cats) + ")\\|Deutsch}}[^]+").exec(page);
+			var cats = this.cat || "(Konjugierte Form)|(Deklinierte Form)|(Substantiv)|(Verb)|(Partizip[^|]*)|" +
+			"(Adjektiv)|(Konjunktion)|(Subjunktion)|(Artikel)|(Numerale)|(Onomatopoetikum)|(Interjektion)|(.+)";
+			
+			var match = new RegExp("{{Wortart\\|(" + cats + ")\\|Deutsch}}[^]+").exec(page);
+
 			var found = !!match;
-			if(match.length == 14 && match[13]) found = /(adverb)|(partikel)|(pronomen)$/.test(match[13]);
+			if(found && match.length == 14 && match[13]) found = /(adverb)|(partikel)|(pronomen)$/.test(match[13]);
 
 			if(found) {
 				switch(match[1]) {
@@ -141,7 +142,6 @@ languages.forEach(function(props) {
 	p.prototype = new parser.parser;
 
 	var proto = p.prototype;
-	proto.cats = props.cats;
 	proto.variants = props.variants;
 	proto.searchDef = props.searchDef;
 
