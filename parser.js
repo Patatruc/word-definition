@@ -11,6 +11,7 @@ var parser = function(word, lng, options, callback) {
 	this.options = options || {};
 	this.callback = callback;
 	this.srwhat = "nearmatch";
+	this.lastTitle = "";
 
 	this.stripAccents = this.options.exact == false ?  stripAccents : function(text) { return text; };
 
@@ -58,7 +59,7 @@ parser.prototype.getTitles = function() {
 
 	}.bind(this));
 
-	req.on("error", function() { this.sendErr(errors.req) }.bind(this));
+	req.on("error", function() { this.sendErr(errors.req); }.bind(this));
 
 }
 
@@ -69,12 +70,15 @@ parser.prototype.getPage = function() {
 		result.on("data", function(chunk) { cont += chunk;	})
 		.on("end", function() {
 			var pages = JSON.parse(cont).query.pages;
-			var page = pages[Object.keys(pages)[0]].revisions[0]["*"];
-			this.parse(page);
+			if(pages[-1]) this.cleanup(this.lastTitle, this.cat.toLowerCase(), this.titles[0]);
+			else {
+				var page = pages[Object.keys(pages)[0]].revisions[0]["*"];
+				this.parse(page);
+			}
 		}.bind(this));
 	}.bind(this));
 
-	req.on("error", function() { this.sendErr(errors.req) }.bind(this));
+	req.on("error", function() { this.sendErr(errors.req); }.bind(this));
 
 }
 
@@ -88,6 +92,7 @@ parser.prototype.parse = function(page) {
 		for(var i = 0, len = this.variants.length; i < len; i++) {
 			var found = this.variants[i].exec(def);
 			if(found) {
+				this.lastTitle = this.titles[0];
 				this.titles[0] = found[found.length - 1];
 				// console.log (this.word + " : variant #" + i + " ==> " + this.titles[0]);
 				this.getPage();

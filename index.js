@@ -139,9 +139,7 @@ languages.forEach(function(props) {
 		this.base(word, props.lng, options, callback);
 	}
 
-	p.prototype = new parser.parser;
-
-	var proto = p.prototype;
+	var proto = p.prototype = new parser.parser;
 	proto.variants = props.variants;
 	proto.searchDef = props.searchDef;
 

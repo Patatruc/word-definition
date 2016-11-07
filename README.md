@@ -36,7 +36,7 @@ wd.getDef(word, language, options, callback);
 ```javascript
 var wd = require("word-definition");
 
-wd.getDef("keyboard", "en", null, function(definition)) {
+wd.getDef("keyboard", "en", null, function(definition) {
 	console.log(definition);
 });
 ```
