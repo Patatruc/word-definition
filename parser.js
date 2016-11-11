@@ -24,6 +24,7 @@ var errors = {
 
 parser.prototype.sendErr = function(err, word) {
 
+	console.log("ERR - word = " +  (word || this.word) + " - lng = " + this.lng + "\n" + err);
 	this.callback( { word: word || this.word, err: err });
 
 }
@@ -35,8 +36,13 @@ parser.prototype.getTitles = function() {
 		var cont = "";
 
 		result.on("data", function(chunk) { cont += chunk; })
-		.on("end", function() { 
-			var articles = JSON.parse(cont).query.search;
+		.on("end", function() {
+			try { // par sécurité
+				var articles = JSON.parse(cont).query.search;
+			}
+			catch(err) {
+				return this.sendErr(errors.req); // "getTitles - cont = " + cont);
+			}
 			if(articles.length) {
 				var exclude = this.titles ? this.titles[0] : "";
 				this.titles = [];
@@ -69,7 +75,12 @@ parser.prototype.getPage = function() {
 		var cont = "";
 		result.on("data", function(chunk) { cont += chunk;	})
 		.on("end", function() {
-			var pages = JSON.parse(cont).query.pages;
+			try { // par sécurité
+				var pages = JSON.parse(cont).query.pages;
+			}
+			catch(err) {
+				return this.sendErr(errors.req); // "getPage - cont = " + cont);
+			}
 			if(pages[-1]) this.cleanup(this.lastTitle, this.cat.toLowerCase(), this.titles[0]);
 			else {
 				var page = pages[Object.keys(pages)[0]].revisions[0]["*"];
@@ -119,7 +130,10 @@ parser.prototype.parse = function(page) {
 
 parser.prototype.cleanup = function(word, cat, def) {
 
-	def = def.replace(/{{[^}]*}}/g, "").trim();
+	def = def.replace(new RegExp("{{(([^}|]+)\\|)+" + this.lng + "}}", "g"), "($2)");
+	def = def.replace(/{{[^}]*}}/g, "");
+
+	def = def.replace(/<(\w+)>[^<]*<\/\1>/, "").trim();
 
 	if(/^\s*\.*$/.test(def)) return this.sendErr(errors.notFound, word);
 
@@ -139,7 +153,7 @@ parser.prototype.cleanup = function(word, cat, def) {
 			def = def.replace(/\[\[([^\]|]+\|)*([^\]]+)\]\]/g, "$2");
 	}
 
-	this.callback({ "word": word, "category": cat, "definition": def.trim() });
+	this.callback({ "word": word, "category": cat.replace(/\|.*/, ""), "definition": def.trim() });
 }
 
 function stripAccents(text) {

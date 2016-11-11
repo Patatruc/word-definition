@@ -50,8 +50,8 @@ var languages = [
 
 		variants: [
 			/{{variante [^|]*\|([^|}]+)/i,
-			/^\s*{{cf\|([^}]+)}}\s*\.*$/i,
-			/((Variante)|(Autre)) [^\[]+\[\[([^\]#|]+)/i,
+			/^{{cf\|([^}]+)}}\s*\.*$/i,
+			/^({{[^}]+}}\s*)*'*((Variante)|(Autre)|(Voir))[^[]+\[\[([^\]#|]+)\]\]\.*$/i,
 			/^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i
 		],
 		
@@ -59,7 +59,7 @@ var languages = [
 
 			var def = "";
 			
-			var cats = this.cat || "(nom)|(verbe)|(adjectif)|(adverbe)|(conjonction[^|]*)|" +
+			var cats = this.cat || "(nom)|(verbe(\\|num=\\d+)*)|(adjectif)|(adverbe)|(conjonction[^|]*)|" +
 			"(article[^|]*)|(pronom[^|]*)|(interjection)|(préposition)|(onomatopée)";
 
 			var match = new RegExp("{{S\\|(" + cats +
@@ -72,14 +72,16 @@ var languages = [
 				if (def) {
 					this.cat = match[1];
 					if (match[nMatches - 5]) {
-						var redirect = /[^\[]*\[\[([^#\-|\]]+)/.exec(def);
+						var redirect = /\[\[([^#\-|\]]+)[^\]]*\]\]\.*$/.exec(def);
 						if (redirect) {
+							if(/^(verbe)|(adjectif)$/.test(this.cat)) this.cat = "(verbe(\\|num=\\d+)*)|(adjectif)";
 							this.titles[0] = redirect[1];
 							// console.log(this.word + " : inflection ==> " + redirect[1]);
 							// this.word = redirect[1];
 							this.getPage();
 							def = true;
 						}
+						else if(this.cat == "(verbe)|(adjectif)") this.cat = match[1];
 					}
 				}
 			}
