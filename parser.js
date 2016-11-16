@@ -31,7 +31,7 @@ parser.prototype.sendErr = function(err, word) {
 
 parser.prototype.getTitles = function() {
 
-	var req = https.get("https://" + this.lng + titlesURL + this.word + "&srwhat=" + this.srwhat, function(result) {
+	var req = https.get("https://" + this.lng + titlesURL + encodeURIComponent(this.word) + "&srwhat=" + this.srwhat, function(result) {
 
 		var cont = "";
 
@@ -41,7 +41,7 @@ parser.prototype.getTitles = function() {
 				var articles = JSON.parse(cont).query.search;
 			}
 			catch(err) {
-				return this.sendErr(errors.req); // "getTitles - cont = " + cont);
+				return this.sendErr(errors.req);
 			}
 			if(articles.length) {
 				var exclude = this.titles ? this.titles[0] : "";
@@ -79,9 +79,13 @@ parser.prototype.getPage = function() {
 				var pages = JSON.parse(cont).query.pages;
 			}
 			catch(err) {
-				return this.sendErr(errors.req); // "getPage - cont = " + cont);
+				return this.sendErr(errors.req);
 			}
-			if(pages[-1]) this.cleanup(this.lastTitle, this.cat.toLowerCase(), this.titles[0]);
+			if(!pages) return this.sendErr("getPage - page = null - cont = " + cont);
+			if(pages[-1]) {
+				if(this.lastTitle) this.cleanup(this.lastTitle, this.cat.toLowerCase(), this.titles[0]);
+				else this.sendErr(errors.notFound);
+			}
 			else {
 				var page = pages[Object.keys(pages)[0]].revisions[0]["*"];
 				this.parse(page);
@@ -94,6 +98,12 @@ parser.prototype.getPage = function() {
 }
 
 parser.prototype.parse = function(page) {
+
+	var autoRedir = /^#REDIRECT[^[]*\[\[([^\]]+)\]\]\s*$/i.exec(page);
+	if(autoRedir) {
+		this.titles[0] = autoRedir[1];
+		return this.getPage();
+	}
 
 	var def = this.searchDef(page);
 

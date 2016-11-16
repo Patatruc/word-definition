@@ -6,7 +6,7 @@ function getDef(word, lng, options, callback) {
 	if(typeof callback != "function") throw "word-definition error: no callback specified (getDef function).";
 	if(typeof options != "object") throw "word-definition error: options should be an object or null (getDef function).";
 
-	if(!word || /[\W\d_]/.test(parser.stripAccents(word))) callback({ word: word, err: "invalid characters" });
+	if(!word || /[^\wœß]/.test(parser.stripAccents(word))) callback({ word: word, err: "invalid characters" });
 	else if(!parsers[lng]) callback({ word: word, err: "unsupported language" });
 	else new parsers[lng](word, options, callback).getTitles();
 
@@ -51,7 +51,7 @@ var languages = [
 		variants: [
 			/{{variante [^|]*\|([^|}]+)/i,
 			/^{{cf\|([^}]+)}}\s*\.*$/i,
-			/^({{[^}]+}}\s*)*'*((Variante)|(Autre)|(Voir))[^[]+\[\[([^\]#|]+)\]\]\.*$/i,
+			/^({{[^}]+}}\s*)*'*((Variante)|(Autre)|(Voir)|(Synonyme)|(Mauvaise orthographe))[^[]+\[\[([^\]#|]+)\]\]/i,
 			/^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i
 		],
 		
@@ -59,20 +59,20 @@ var languages = [
 
 			var def = "";
 			
-			var cats = this.cat || "(nom)|(verbe(\\|num=\\d+)*)|(adjectif)|(adverbe)|(conjonction[^|]*)|" +
-			"(article[^|]*)|(pronom[^|]*)|(interjection)|(préposition)|(onomatopée)";
+			var cats = this.cat || "(nom)|(verbe)|(adjectif)|(adverbe)|(conjonction[^|]*)|" +
+			"(article[^|]*)|(pronom[^|]*)|(interjection)|(préposition)|(onomatopée)|(variante typographique)";
 
 			var match = new RegExp("{{S\\|(" + cats +
-				")\\|fr(\\|flexion)*.+(\\n[^#].+)*\\n#(.+)(\\n##(.+)){0,1}").exec(page);
+				")\\|fr(\\|num=\\d+)*(\\|flexion)*.+(\\n[^#].+)*\\n#\\s*(.+)(\\n##(.+)){0,1}").exec(page);
 
 			if(match) {
 				var nMatches = match.length;
 				def = match[nMatches - 3].trim();
 				if (match[nMatches - 1] && def.replace(/{{[^}]*}}/g, "").trim() == "") def = match[nMatches - 1].trim();
 				if (def) {
-					this.cat = match[1];
+					this.cat = match[1] == "variante typographique" ? "" : match[1];
 					if (match[nMatches - 5]) {
-						var redirect = /\[\[([^#\-|\]]+)[^\]]*\]\]\.*$/.exec(def);
+						var redirect = /\[\[([^#\-|\]]+)[^\]]*\]\]['\s\.]*$/.exec(def);
 						if (redirect) {
 							if(/^(verbe)|(adjectif)$/.test(this.cat)) this.cat = "(verbe(\\|num=\\d+)*)|(adjectif)";
 							this.titles[0] = redirect[1];
@@ -105,7 +105,17 @@ var languages = [
 			var match = new RegExp("{{Wortart\\|(" + cats + ")\\|Deutsch}}[^]+").exec(page);
 
 			var found = !!match;
-			if(found && match.length == 14 && match[13]) found = /(adverb)|(partikel)|(pronomen)$/.test(match[13]);
+			if(found) {
+				if (match.length == 14 && match[13]) found = /(adverb)|(partikel)|(pronomen)$/.test(match[13]);
+			}
+			else {
+				var newSpelling = /{{Alte Schreibweise\|([^|]+)\|/.exec(page);
+				if(newSpelling) {
+					this.titles[0] = newSpelling[1];
+					this.getPage();
+					def = true;
+				}
+			}
 
 			if(found) {
 				switch(match[1]) {
@@ -113,7 +123,7 @@ var languages = [
 					case "Deklinierte Form":
 						var redirect = /{{Grammatische Merkmale}}\n+[^\[]+\[\[([^\]|]+)/.exec(match[0]);
 						if (redirect) {
-							this.titles[0] = redirect[1].replace(/\W/, "");
+							this.titles[0] = redirect[1].replace(/[^a-zäöüß]/gi, "");
 							this.getPage();
 							def = true;
 						}
@@ -126,7 +136,9 @@ var languages = [
 						}
 				}
 			}
+
 			return def;
+
 		}
 	}
 
