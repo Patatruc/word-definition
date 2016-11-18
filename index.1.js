@@ -20,7 +20,7 @@ var languages = [
 
 		variants: [
 			/^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i,
-			/\s*{{(([^|]+ of)|(alt form))\|([^}|]+)/
+			/\s*{{[^|]+ of\|([^}|]+)/
 		],
 
 		searchDef: function(page) {
@@ -33,15 +33,11 @@ var languages = [
 			var match = new RegExp("===(" + cats + ")===[^]+").exec(page);
 
 			if(match) {
-				var match2 = /\n{{((en-)|(head\|en)).+([^]+)/.exec(match[0]);
+				var match2 = /\n{{((en-)|(head\|en)).*\n(\[\[[^\]]*\]\])*\n#(.+)(\n##(.+)){0,1}/.exec(match[0]);
 				if(match2) {
-					var match3 = /\n#\s(.+)/.exec(match2[4]);
-					if(match3) {
-						def = match3[1].trim();
-						this.cat = match[1];
-						var nonGloss = /{{non-gloss definition\|([^}]+)}}/.exec(def);
-						if(nonGloss) def = this.cat + " " + nonGloss[1];
-					}
+					def = match2[5].trim();
+					this.cat = match[1];
+					if (match[6] && def.replace(/{{[^}]*}}/g, "").trim() == "") def = match2[6].trim();
 				}
 			}
 			return def;
@@ -63,11 +59,11 @@ var languages = [
 
 			var def = "";
 			
-			var cats = this.cat || "(nom)|(verbe)|(adjectif([^|]*))|(adverbe)|(conjonction[^|]*)|" +
+			var cats = this.cat || "(nom)|(verbe)|(adjectif)|(adverbe)|(conjonction[^|]*)|" +
 			"(article[^|]*)|(pronom[^|]*)|(interjection)|(préposition)|(onomatopée)|(variante typographique)";
 
 			var match = new RegExp("{{S\\|(" + cats +
-				")(\\|num=\\d+)*\\|fr(\\|num=\\d+)*(\\|flexion)*.+(\\n[^#].+)*\\n#\\s*(.+)(\\n##(.+)){0,1}").exec(page);
+				")\\|fr(\\|num=\\d+)*(\\|flexion)*.+(\\n[^#].+)*\\n#\\s*(.+)(\\n##(.+)){0,1}").exec(page);
 
 			if(match) {
 				var nMatches = match.length;
@@ -78,8 +74,7 @@ var languages = [
 					if (match[nMatches - 5]) {
 						var redirect = /\[\[([^#\-|\]]+)[^\]]*\]\]['\s\.]*$/.exec(def);
 						if (redirect) {
-							if(/^(verbe)|(adjectif)$/.test(this.cat))
-								this.cat = "(verbe(\\|num=\\d+)*)|(adjectif)";
+							if(/^(verbe)|(adjectif)$/.test(this.cat)) this.cat = "(verbe(\\|num=\\d+)*)|(adjectif)";
 							this.titles[0] = redirect[1];
 							// console.log(this.word + " : inflection ==> " + redirect[1]);
 							// this.word = redirect[1];

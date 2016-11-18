@@ -11,3 +11,7 @@
 . Redirects (`#REDIRECT [[target]]`) are handled properly.  
 . Words can contain the characters **œ** (example: *œuf* in French) and **ß** (*daß* in German).  
 . Redirections improved in French.
+
+**Version 2.1.6** (2016-11-18)
+
+. Some english definitions were not found.

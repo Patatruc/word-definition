@@ -24,7 +24,7 @@ var errors = {
 
 parser.prototype.sendErr = function(err, word) {
 
-	console.log("ERR - word = " +  (word || this.word) + " - lng = " + this.lng + "\n" + err);
+	// console.log("ERR - word = " +  (word || this.word) + " - lng = " + this.lng + "\n" + err);
 	this.callback( { word: word || this.word, err: err });
 
 }
@@ -155,8 +155,8 @@ parser.prototype.cleanup = function(word, cat, def) {
 			break;
 		case "html":
 			var url = "https://" + this.lng + ".wiktionary.org/wiki/";
-			def = def.replace(/\[\[([^\]|]+)(\|)([^\]]+)\]\]/g,	"<a href='" + url + "$1' target='_blank'>$3</a>");
-			def = def.replace(/\[\[([^\]]+)\]\]/g,	"<a href='" + url + "$1' target='_blank'>$1</a>");
+			def = def.replace(/\[\[([^\]|]+)(\|)([^\]]+)\]\]/g, "<a href='" + url + "$1' target='_blank'>$3</a>");
+			def = def.replace(/\[\[([^\]]+)\]\]/g, "<a href='" + url + "$1' target='_blank'>$1</a>");
 			break;
 		case "none":
 		default:
