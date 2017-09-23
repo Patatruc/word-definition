@@ -9,7 +9,7 @@ For instance the definition of "ride":
 	"definition": "To transport oneself by sitting on and directing a horse, later also a bicycle etc."
 }
 ```
-It supports three languages: **english**, **french** and **german**.
+It supports four languages: **english**, **spanish**, **french** and **german**.
 
 It retrieves only the **topmost definition**, for instance in the example above it returns the (first) definition of the verb *"to ride"* and not of the noun *"ride"* (because the definition of the verb comes first in the related [Wiktionary document](https://en.wiktionary.org/wiki/ride)).
 
@@ -53,7 +53,7 @@ See demo.js for further examples.
 
 `word` : the word that you want to define
 
-`language`: "en" (english), "fr" (french) or "de" (german) - required
+`language`: "en" (english), "es" (spanish), "fr" (french) or "de" (german) - required
 
 `options` : null or object - see below
 

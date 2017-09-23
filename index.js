@@ -49,6 +49,54 @@ var languages = [
 	},
 
 	{
+		lng: "es",
+
+		variants: [
+			/^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i,
+			/\s*{{(([^|]+ of)|(alt form))\|([^}|]+)/
+		],
+
+		searchDef: function(page) {
+
+			var def = "";
+
+			var cats = this.cat || "(verbo)|(sustantivo femenino)|(sustantivo masculino)|(adjetivo)|" +
+				"(interjección)|(forma verbal)|(adverbo)";
+
+			var match = new RegExp("=== {{(" + cats + ")\\|es}} ===[^]+").exec(page);
+			if (match)
+			{
+				this.cat = match[0].match(cats)[0];
+				match = match[0].split(/\r?\n/);
+				if(match) {
+					var i;
+					for (i = 0; i < match.length; i++)
+					{
+						if (match[i] && (match[i].match(/^;1[\W:]/) !== null))
+						{
+							break;
+						}
+					}
+					if (i === match.length)
+					{
+						// console.log("Error: no definition found!");
+						return def;
+					}
+					var defString = match[i];
+					while (defString.match(/^[0-9\:\;]/))
+					{
+						defString = defString.substr(1);
+					}
+					defString = defString.trim();
+					def = defString;
+				}
+			}
+			return def;
+		}
+	},
+
+
+	{
 
 		lng: "fr",
 
