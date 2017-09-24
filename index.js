@@ -61,9 +61,9 @@ var languages = [
 			var def = "";
 
 			var cats = this.cat || "(verbo)|(sustantivo femenino)|(sustantivo masculino)|(adjetivo)|" +
-				"(interjección)|(forma verbal)|(adverbo)";
+				"(interjección)|(forma verbal)|(adverbo)|(verbo transitivo)";
 
-			var match = new RegExp("=== {{(" + cats + ")\\|es}} ===[^]+").exec(page);
+			var match = new RegExp("=== {{(" + cats + ")\\|es}} ===[^]+", 'i').exec(page);
 			if (match)
 			{
 				this.cat = match[0].match(cats)[0];
