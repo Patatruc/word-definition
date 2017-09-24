@@ -62,7 +62,7 @@ var languages = [
 			var cats = this.cat || "(verbo)|(sustantivo femenino)|(sustantivo masculino)|(adjetivo)|" +
 				"(interjección)|(adverbo)|(verbo transitivo)|(verbo intransitivo)";
 
-			var match = new RegExp("=== {{(" + cats + ")\\|es}} ===[^]+", 'i').exec(page);
+			var match = new RegExp("=== ?{{(" + cats + ")\\|es}} ?===[^]+", 'i').exec(page);
 			if (match)
 			{
 				this.cat = match[0].match(cats)[0];
@@ -71,7 +71,7 @@ var languages = [
 					var i;
 					for (i = 0; i < match.length; i++)
 					{
-						if (match[i] && (match[i].match(/^;1[\W:]/) !== null))
+						if (match[i] && (match[i].match(/^;[0-9]{1,2}[: ]/) !== null))
 						{
 							break;
 						}
@@ -79,7 +79,7 @@ var languages = [
 					if (i < match.length)
 					{
 						var defString = match[i];
-						while (defString.match(/^[0-9\:\; ]/))
+						while (defString.match(/^[0-9 \:\;]/))
 						{
 							defString = defString.substr(1);
 						}
@@ -105,7 +105,7 @@ var languages = [
 					match = match[0].split(/\r?\n/);
 					for (i = 0; i < match.length; i++)
 					{
-						if (match[i] && (match[i].match(/^;1[: ]{1,2}/) !== null))
+						if (match[i] && (match[i].match(/^;[1-9][: ]/) !== null))
 						{
 							break;
 						}
