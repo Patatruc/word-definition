@@ -52,8 +52,7 @@ var languages = [
 		lng: "es",
 
 		variants: [
-			/^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i,
-			/\s*{{(([^|]+ of)|(alt form))\|([^}|]+)/
+			/\s*{{((participio)|(alt form))\|([^}|]+)/i
 		],
 
 		searchDef: function(page) {
@@ -61,7 +60,7 @@ var languages = [
 			var def = "";
 
 			var cats = this.cat || "(verbo)|(sustantivo femenino)|(sustantivo masculino)|(adjetivo)|" +
-				"(interjección)|(forma verbal)|(adverbo)|(verbo transitivo)";
+				"(interjección)|(adverbo)|(verbo transitivo)|(verbo intransitivo)";
 
 			var match = new RegExp("=== {{(" + cats + ")\\|es}} ===[^]+", 'i').exec(page);
 			if (match)
@@ -77,18 +76,55 @@ var languages = [
 							break;
 						}
 					}
-					if (i === match.length)
+					if (i < match.length)
 					{
+						var defString = match[i];
+						while (defString.match(/^[0-9\:\; ]/))
+						{
+							defString = defString.substr(1);
+						}
+						defString = defString.trim();
+						def = defString;
+					}
+					else
+					{
+						// If not found, then our search overran the array and found nothing.
 						// console.log("Error: no definition found!");
-						return def;
 					}
-					var defString = match[i];
-					while (defString.match(/^[0-9\:\;]/))
+				}
+			}
+			// Maybe it's a 'forma verbal'! Redirect if first pass didn't catch anything.
+			if(!def)
+			{
+				cats = this.cat || "(Forma verbal)";
+				match = new RegExp("===(" + cats + ")===[^]+", 'i').exec(page);
+				if (match)
+				{
+					var i;
+					this.cat = match[0].match(cats)[0];
+					match = match[0].split(/\r?\n/);
+					for (i = 0; i < match.length; i++)
 					{
-						defString = defString.substr(1);
+						if (match[i] && (match[i].match(/^;1[: ]{1,2}/) !== null))
+						{
+							break;
+						}
 					}
-					defString = defString.trim();
-					def = defString;
+					if (i < match.length)
+					{
+						var redirect = /\s{{((participio)|(alt form))\|([^}|]+)/.exec(match[i]);
+						if(redirect)
+						{
+							this.cat = undefined;
+							this.titles[0] = redirect[0].split('|')[1];
+							this.getPage();
+							def = true;
+						}
+					}
+					else
+					{
+						console.error("Failed to parse");
+					}
 				}
 			}
 			return def;
