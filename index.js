@@ -20,7 +20,7 @@ var languages = [
 
 		variants: [
 			/^({{[^}]+}}\s*)*\[\[([^\]#|]+)[^\]]*\]\]\.*$/i,
-			/\s*{{(([^|]+ of)|(alt form))\|([^}|]+)/
+			/\s*{{(([^|]+ of)|(alt form))\|(en\|)?([^}|]+)/
 		],
 
 		searchDef: function(page) {
